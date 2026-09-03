@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Science Pal</title>
+
+<!-- PWA / add-to-home-screen support -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Science Pal">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#4b5a5b">
+<link rel="manifest" href="manifest.json">
+
+<style>
+  :root{
+    --bg:#d9d7cc;
+    --titlebar:#4b5a5b;
+    --titlebar-line:#333d3e;
+    --titlebar-text:#e9e7db;
+    --panel:#c7c5b7;
+    --panel-line:#a8a695;
+    --panel-head:#93958a;
+    --ink:#22221d;
+    --ink-dim:#4b4c43;
+    --accent:#3f8b81;
+    --accent-bg:#dbe6e2;
+    --warn:#8a5a00;
+    --warn-bg:#f0dca0;
+    --hazardA:#cecbbd;
+    --hazardB:#aaa896;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"Courier New",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    min-height:100vh;
+  }
+  .titlebar{
+    width:100%;
+    background:var(--titlebar);
+    color:var(--titlebar-text);
+    padding:16px;
+    font-size:17px;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    font-weight:700;
+    border-bottom:2px solid var(--titlebar-line);
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+  }
+  .titlebar .sub{
+    font-size:11px;
+    letter-spacing:0.14em;
+    opacity:0.7;
+    font-weight:400;
+  }
+  .wrap{max-width:460px;margin:0 auto;padding:18px 16px 60px;}
+
+  /* tabs */
+  .tabs{display:flex;gap:0;margin-bottom:18px;border:1px solid var(--panel-line);}
+  .tab{
+    flex:1;
+    background:var(--panel);
+    color:var(--ink-dim);
+    border:0;
+    border-right:1px solid var(--panel-line);
+    padding:11px 4px;
+    font-family:inherit;
+    font-size:12.5px;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    font-weight:700;
+    cursor:pointer;
+  }
+  .tab:last-child{border-right:0;}
+  .tab[aria-selected="true"]{background:var(--titlebar);color:var(--titlebar-text);}
+  .tab:focus-visible{outline:2px solid var(--accent);outline-offset:-4px;}
+
+  .panel-title{
+    display:flex;align-items:center;gap:10px;
+    color:var(--accent);
+    font-size:12.5px;letter-spacing:0.16em;text-transform:uppercase;font-weight:700;
+    margin:0 0 8px;
+  }
+  .panel-title::after{content:"";flex:1;height:1px;background:var(--accent);opacity:0.55;}
+
+  .panel{
+    background:var(--panel);
+    border:1px solid var(--panel-line);
+    padding:14px;
+    margin-bottom:22px;
+  }
+  .note{font-size:13px;line-height:1.55;color:var(--ink-dim);margin:0 0 12px;}
+
+  label{
+    display:block;
+    font-size:11.5px;letter-spacing:0.14em;text-transform:uppercase;
+    color:var(--ink-dim);margin-bottom:5px;
+  }
+  .field{margin-bottom:12px;}
+  .row{display:flex;gap:10px;}
+  .row .field{flex:1;}
+  input[type="number"]{
+    width:100%;
+    background:#e6e4d9;
+    border:1px solid var(--panel-line);
+    border-bottom:2px solid var(--panel-head);
+    padding:10px;
+    font-family:inherit;font-size:18px;color:var(--ink);
+  }
+  input:focus{outline:2px solid var(--accent);outline-offset:-2px;}
+  .inputwrap{position:relative;}
+  .inputwrap input{padding-right:34px;}
+  .inputwrap .suffix{
+    position:absolute;right:11px;top:50%;transform:translateY(-50%);
+    font-size:17px;font-weight:700;color:var(--accent);pointer-events:none;
+  }
+  select{
+    width:100%;
+    background:#e6e4d9;
+    border:1px solid var(--panel-line);
+    padding:9px;
+    font-family:inherit;font-size:15px;color:var(--ink);
+  }
+
+  .readout{
+    background:var(--accent-bg);
+    border:1px solid var(--accent);
+    padding:14px;
+    text-align:center;
+  }
+  .readout .big{
+    font-size:32px;font-weight:700;letter-spacing:0.02em;line-height:1.1;
+    color:var(--ink);
+  }
+  .readout .cap{
+    font-size:11.5px;letter-spacing:0.16em;text-transform:uppercase;
+    color:var(--accent);margin-bottom:6px;
+  }
+  .readout .alt{font-size:12.5px;color:var(--ink-dim);margin-top:6px;}
+
+  .split{display:flex;gap:10px;}
+  .split .readout{flex:1;}
+  .split .readout .big{font-size:24px;}
+
+  .method{
+    margin-top:12px;
+    font-size:13.5px;line-height:1.6;
+    border-top:1px dashed var(--panel-head);
+    padding-top:10px;
+    color:var(--ink);
+  }
+  .method b{color:var(--accent);}
+
+  .flag{
+    margin-top:10px;
+    background:var(--warn-bg);
+    border:1px solid var(--warn);
+    color:var(--warn);
+    padding:9px;
+    font-size:12.5px;line-height:1.5;
+  }
+
+  .hazard{
+    background:repeating-linear-gradient(45deg,var(--hazardA) 0 10px,var(--hazardB) 10px 20px);
+    border:1px solid var(--panel-line);
+    padding:26px 14px;
+    text-align:center;
+    font-size:12.5px;letter-spacing:0.16em;text-transform:uppercase;
+    color:var(--ink-dim);font-weight:700;
+  }
+  .prow{
+    display:block;width:100%;text-align:left;
+    background:var(--panel);border:1px solid var(--panel-line);
+    border-left:4px solid var(--accent);
+    padding:14px;margin-bottom:10px;
+    font-family:inherit;font-size:14px;font-weight:700;color:var(--ink);
+    cursor:pointer;
+  }
+  .prow span{display:block;font-weight:400;font-size:12px;color:var(--ink-dim);margin-top:4px;}
+  .prow:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+  .back{
+    background:none;border:0;padding:0 0 12px;
+    font-family:inherit;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;
+    color:var(--accent);cursor:pointer;font-weight:700;
+  }
+  .ptitle{font-size:17px;font-weight:700;margin:0 0 4px;letter-spacing:0.02em;}
+  .psub{font-size:12.5px;color:var(--ink-dim);margin:0 0 18px;line-height:1.5;}
+  .step{
+    font-size:13.5px;line-height:1.6;padding:8px 0 8px 16px;
+    border-bottom:1px dashed var(--panel-head);position:relative;
+  }
+  .step:last-child{border-bottom:0;}
+  .step::before{content:"\25B8";position:absolute;left:0;color:var(--accent);}
+  .pnote{font-size:12.5px;line-height:1.55;color:var(--ink-dim);padding:8px 0;font-style:italic;}
+  table.reag{width:100%;border-collapse:collapse;font-size:12px;}
+  table.reag td{border-bottom:1px solid var(--panel-line);padding:6px 4px;vertical-align:top;}
+  table.reag td:first-child{font-weight:700;}
+  table.reag td:last-child{color:var(--ink-dim);text-align:right;white-space:nowrap;}
+  .hidden{display:none;}
+  footer{
+    text-align:center;font-size:11px;letter-spacing:0.12em;
+    color:var(--ink-dim);text-transform:uppercase;margin-top:26px;
+  }
+</style>
+</head>
+<body>
+
+<div class="titlebar"><span>Science Pal</span><span class="sub">Bench Calc</span></div>
+
+<div class="wrap">
+
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" aria-selected="true"  data-tab="wv">Weigh out</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="dil">Dilute</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="pro">Protocols</button>
+  </div>
+
+  <!-- ================= WEIGH OUT ================= -->
+  <section id="tab-wv">
+
+    <h2 class="panel-title">Solid into liquid</h2>
+    <div class="panel">
+      <p class="note">% w/v, where 1 g in 100 ml = 1%. Enter your final volume and the strength you want.</p>
+      <div class="row">
+        <div class="field">
+          <label for="wvVol">Final volume</label>
+          <input type="number" id="wvVol" inputmode="decimal" step="any" min="0" value="100">
+        </div>
+        <div class="field">
+          <label for="wvUnit">Unit</label>
+          <select id="wvUnit">
+            <option value="1">ml</option>
+            <option value="1000">litres</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label for="wvPct">Strength required (w/v)</label>
+        <div class="inputwrap">
+          <input type="number" id="wvPct" inputmode="decimal" step="any" min="0" value="4">
+          <span class="suffix">%</span>
+        </div>
+      </div>
+
+      <div class="readout">
+        <div class="cap">Weigh out</div>
+        <div class="big" id="wvOut">4 g</div>
+        <div class="alt" id="wvAlt">4000 mg</div>
+      </div>
+      <div class="method" id="wvMethod"></div>
+      <div class="flag hidden" id="wvFlag"></div>
+    </div>
+
+    <h2 class="panel-title">Work back to a %</h2>
+    <div class="panel">
+      <p class="note">Already weighed something out? Enter mass and volume to get the strength.</p>
+      <div class="row">
+        <div class="field">
+          <label for="bkMass">Mass</label>
+          <input type="number" id="bkMass" inputmode="decimal" step="any" min="0" value="2">
+        </div>
+        <div class="field">
+          <label for="bkMassUnit">Unit</label>
+          <select id="bkMassUnit">
+            <option value="1">g</option>
+            <option value="0.001">mg</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label for="bkVol">In volume</label>
+          <input type="number" id="bkVol" inputmode="decimal" step="any" min="0" value="50">
+        </div>
+        <div class="field">
+          <label for="bkVolUnit">Unit</label>
+          <select id="bkVolUnit">
+            <option value="1">ml</option>
+            <option value="1000">litres</option>
+          </select>
+        </div>
+      </div>
+      <div class="readout">
+        <div class="cap">Strength</div>
+        <div class="big" id="bkOut">4 % w/v</div>
+        <div class="alt" id="bkAlt">40 mg/ml</div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ================= DILUTE ================= -->
+  <section id="tab-dil" class="hidden">
+
+    <h2 class="panel-title">Stock to working strength</h2>
+    <div class="panel">
+      <p class="note">C1V1 = C2V2. Works for any % stock — w/v or v/v — as long as both strengths are the same kind.</p>
+      <div class="row">
+        <div class="field">
+          <label for="dStock">Stock %</label>
+          <input type="number" id="dStock" inputmode="decimal" step="any" min="0" value="16">
+        </div>
+        <div class="field">
+          <label for="dTarget">Working %</label>
+          <input type="number" id="dTarget" inputmode="decimal" step="any" min="0" value="4">
+        </div>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label for="dVol">Final volume</label>
+          <input type="number" id="dVol" inputmode="decimal" step="any" min="0" value="50">
+        </div>
+        <div class="field">
+          <label for="dVolUnit">Unit</label>
+          <select id="dVolUnit">
+            <option value="1">ml</option>
+            <option value="1000">litres</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="split">
+        <div class="readout">
+          <div class="cap">Stock</div>
+          <div class="big" id="dStockOut">12.5 ml</div>
+        </div>
+        <div class="readout">
+          <div class="cap">Diluent</div>
+          <div class="big" id="dDilOut">37.5 ml</div>
+        </div>
+      </div>
+      <div class="method" id="dMethod"></div>
+      <div class="flag hidden" id="dFlag"></div>
+    </div>
+
+    <h2 class="panel-title">C1V1 = C2V2 solver</h2>
+    <div class="panel">
+      <p class="note">Fill in any three, pick the fourth as the unknown. Concentration units just have to match each other — M, mM, mg/ml, %, anything. Volumes are ml.</p>
+      <div class="field">
+        <label for="eqSolve">Solve for</label>
+        <select id="eqSolve">
+          <option value="c1">C1 — stock concentration</option>
+          <option value="v1" selected>V1 — volume of stock</option>
+          <option value="c2">C2 — final concentration</option>
+          <option value="v2">V2 — final volume</option>
+        </select>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label for="eqC1">C1 (conc)</label>
+          <input type="number" id="eqC1" inputmode="decimal" step="any" min="0" value="10">
+        </div>
+        <div class="field">
+          <label for="eqV1">V1 (ml)</label>
+          <input type="number" id="eqV1" inputmode="decimal" step="any" min="0" value="">
+        </div>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label for="eqC2">C2 (conc)</label>
+          <input type="number" id="eqC2" inputmode="decimal" step="any" min="0" value="2">
+        </div>
+        <div class="field">
+          <label for="eqV2">V2 (ml)</label>
+          <input type="number" id="eqV2" inputmode="decimal" step="any" min="0" value="25">
+        </div>
+      </div>
+
+      <div class="readout">
+        <div class="cap" id="eqCap">V1 — volume of stock</div>
+        <div class="big" id="eqOut">5 ml</div>
+        <div class="alt" id="eqAlt"></div>
+      </div>
+      <div class="method" id="eqMethod"></div>
+      <div class="flag hidden" id="eqFlag"></div>
+    </div>
+
+    <h2 class="panel-title">Fold dilution</h2>
+    <div class="panel">
+      <p class="note">For anything quoted as 1:X — antibodies, dyes, stock buffers.</p>
+      <div class="row">
+        <div class="field">
+          <label for="fFold">Dilution 1 in</label>
+          <input type="number" id="fFold" inputmode="decimal" step="any" min="1" value="500">
+        </div>
+        <div class="field">
+          <label for="fVol">Final volume (ml)</label>
+          <input type="number" id="fVol" inputmode="decimal" step="any" min="0" value="1">
+        </div>
+      </div>
+      <div class="split">
+        <div class="readout">
+          <div class="cap">Add</div>
+          <div class="big" id="fStockOut">2 µl</div>
+        </div>
+        <div class="readout">
+          <div class="cap">Diluent</div>
+          <div class="big" id="fDilOut">998 µl</div>
+        </div>
+      </div>
+      <div class="flag hidden" id="fFlag"></div>
+    </div>
+
+  </section>
+
+  <!-- ================= PROTOCOLS ================= -->
+  <section id="tab-pro" class="hidden">
+    <div id="proList"></div>
+    <div id="proDetail" class="hidden"></div>
+  </section>
+
+  <footer>Science Pal</footer>
+</div>
+
+<script>
+/* ---------- helpers ---------- */
+function fmt(n, dp){
+  if(!isFinite(n)) return "—";
+  var s = n.toFixed(dp === undefined ? 3 : dp);
+  s = s.replace(/\.?0+$/,"");
+  return s === "" || s === "-" ? "0" : s;
+}
+function num(id){ var v = parseFloat(document.getElementById(id).value); return isNaN(v) ? 0 : v; }
+function set(id, txt){ document.getElementById(id).textContent = txt; }
+function flag(id, msg){
+  var el = document.getElementById(id);
+  if(msg){ el.textContent = msg; el.classList.remove("hidden"); }
+  else { el.classList.add("hidden"); }
+}
+
+/* ---------- weigh out ---------- */
+function calcWV(){
+  var ml  = num("wvVol") * parseFloat(document.getElementById("wvUnit").value);
+  var pct = num("wvPct");
+  var g   = ml * pct / 100;
+
+  set("wvOut", fmt(g, 4) + " g");
+  set("wvAlt", fmt(g*1000, 2) + " mg");
+  document.getElementById("wvMethod").innerHTML =
+    "Weigh <b>" + fmt(g,4) + " g</b>, dissolve in a little less than " + fmt(ml,2) +
+    " ml, then make up to <b>" + fmt(ml,2) + " ml</b> final volume.";
+
+  if(pct > 100) flag("wvFlag","Over 100% w/v — that is more than 1 g per ml. Check the figure.");
+  else if(g > 0 && g < 0.01) flag("wvFlag","Under 10 mg. Consider making a larger volume or a concentrated stock and diluting down.");
+  else flag("wvFlag","");
+}
+
+/* ---------- back-calculate ---------- */
+function calcBack(){
+  var g  = num("bkMass") * parseFloat(document.getElementById("bkMassUnit").value);
+  var ml = num("bkVol")  * parseFloat(document.getElementById("bkVolUnit").value);
+  if(ml <= 0){ set("bkOut","—"); set("bkAlt","enter a volume"); return; }
+  var pct = g / ml * 100;
+  set("bkOut", fmt(pct,4) + " % w/v");
+  set("bkAlt", fmt(g*1000/ml, 3) + " mg/ml");
+}
+
+/* ---------- dilution ---------- */
+function calcDil(){
+  var c1 = num("dStock"), c2 = num("dTarget");
+  var v2 = num("dVol") * parseFloat(document.getElementById("dVolUnit").value);
+  if(c1 <= 0){ set("dStockOut","—"); set("dDilOut","—"); flag("dFlag","Enter a stock strength above zero."); document.getElementById("dMethod").textContent=""; return; }
+  var v1 = c2 * v2 / c1;
+  var dil = v2 - v1;
+
+  set("dStockOut", v1 < 1 ? fmt(v1*1000,1) + " µl" : fmt(v1,3) + " ml");
+  set("dDilOut",  dil < 1 && dil > 0 ? fmt(dil*1000,1) + " µl" : fmt(dil,3) + " ml");
+  document.getElementById("dMethod").innerHTML =
+    "Take <b>" + fmt(v1,3) + " ml</b> of " + fmt(c1,3) + "% stock and add <b>" +
+    fmt(dil,3) + " ml</b> of diluent. That is a 1 in " + fmt(c1/c2,2) + " dilution.";
+
+  if(c2 > c1) flag("dFlag","Working strength is higher than the stock. You cannot get there by diluting.");
+  else flag("dFlag","");
+}
+
+/* ---------- C1V1 = C2V2 solver ---------- */
+var EQ_LABEL = {
+  c1:"C1 — stock concentration",
+  v1:"V1 — volume of stock",
+  c2:"C2 — final concentration",
+  v2:"V2 — final volume"
+};
+function calcEq(){
+  var solveFor = document.getElementById("eqSolve").value;
+  var ids = ["c1","v1","c2","v2"];
+
+  // grey out and clear the unknown field
+  ids.forEach(function(k){
+    var el = document.getElementById("eq" + k.toUpperCase());
+    var isUnknown = (k === solveFor);
+    el.disabled = isUnknown;
+    el.style.opacity = isUnknown ? "0.4" : "1";
+    if(isUnknown) el.value = "";
+  });
+
+  var c1 = num("eqC1"), v1 = num("eqV1"), c2 = num("eqC2"), v2 = num("eqV2");
+  var res, unit = (solveFor === "v1" || solveFor === "v2") ? " ml" : "", div;
+
+  if(solveFor === "c1"){ div = v1; res = c2 * v2 / v1; }
+  else if(solveFor === "v1"){ div = c1; res = c2 * v2 / c1; }
+  else if(solveFor === "c2"){ div = v2; res = c1 * v1 / v2; }
+  else { div = c2; res = c1 * v1 / c2; }
+
+  document.getElementById("eqCap").textContent = EQ_LABEL[solveFor];
+
+  if(!(div > 0) || !isFinite(res)){
+    set("eqOut","—"); set("eqAlt","");
+    document.getElementById("eqMethod").textContent = "";
+    flag("eqFlag","Fill in the other three values.");
+    return;
+  }
+
+  set("eqOut", fmt(res,4) + unit);
+  set("eqAlt", (solveFor === "v1" && res < 1) ? fmt(res*1000,1) + " µl" : "");
+
+  // rebuild the full set for the method line
+  var C1 = solveFor==="c1"?res:c1, V1 = solveFor==="v1"?res:v1,
+      C2 = solveFor==="c2"?res:c2, V2 = solveFor==="v2"?res:v2;
+  document.getElementById("eqMethod").innerHTML =
+    "<b>" + fmt(C1,4) + " × " + fmt(V1,4) + " = " + fmt(C2,4) + " × " + fmt(V2,4) + "</b><br>" +
+    "Take " + fmt(V1,4) + " ml of stock and add " + fmt(V2-V1,4) + " ml of diluent to reach " +
+    fmt(V2,4) + " ml.";
+
+  if(C2 > C1) flag("eqFlag","C2 is above C1 — that is a concentration step, not a dilution. Check the values.");
+  else if(V1 > V2) flag("eqFlag","V1 is larger than V2. Check which volume is which.");
+  else flag("eqFlag","");
+}
+
+/* ---------- fold dilution ---------- */
+function calcFold(){
+  var fold = num("fFold"), v = num("fVol");
+  if(fold < 1){ set("fStockOut","—"); set("fDilOut","—"); flag("fFlag","A 1 in X dilution needs X of 1 or more."); return; }
+  var stock = v / fold, dil = v - stock;
+  set("fStockOut", stock < 1 ? fmt(stock*1000,2) + " µl" : fmt(stock,3) + " ml");
+  set("fDilOut",  dil  < 1 ? fmt(dil*1000,2)  + " µl" : fmt(dil,3)  + " ml");
+  if(stock*1000 < 1 && stock > 0) flag("fFlag","Under 1 µl of stock — make an intermediate dilution first.");
+  else flag("fFlag","");
+}
+
+/* ---------- protocols ---------- */
+/* Block types: h = heading, s = step, n = note, w = warning, r = reagent rows */
+var RECIPES = [
+  {
+    title: "nRIM / EZView",
+    sub: "Refractive index matching medium",
+    blocks: [
+      {h:"Phosphate buffer stock"},
+      {s:"0.2 M: 500 ml dH2O + 3.1 g NaH2PO4 (monobasic) + 10.0 g Na2HPO4 (dibasic). Dilute 1:10 in dH2O for use."},
+      {s:"Or make 0.02 M directly: 12.4 g NaH2PO4 (monobasic) + 40 g Na2HPO4·2H2O, made up to 2 L in dH2O."},
+      {h:"nRIM"},
+      {s:"52.5 g urea + 31.25 mg sodium azide in 42 ml 0.02 M sodium phosphate buffer. Stir at 37 °C."},
+      {s:"Once dissolved, add 100 g Nycodenz slowly until dissolved. Gives RI around 1.512."},
+      {h:"Bringing the RI down"},
+      {s:"A further 54 ml takes it to RI 1.46 — some systems prefer this."},
+      {s:"A further 64 ml takes it to RI 1.4589, the closest match achieved to 1.4587 oil."},
+      {n:"Confirm on the refractometer rather than trusting the volumes."},
+      {h:"Reagents"},
+      {r:[["Nycodenz","Proteogenix","#1002424"],["Urea","Sigma Aldrich","U5128-1kg"]]}
+    ]
+  },
+  {
+    title: "HCR labelling",
+    sub: "700 µm mouse brain slices, single round. Follows on from the brain slicing protocol.",
+    blocks: [
+      {n:"Slice has been post-fixed in 4% PFA and stored in 50% formamide, 20% PEG in the freezer."},
+      {s:"Wash 3 × 30 min in RNase-free PBS to wash out the formamide/PEG."},
+      {h:"Pause steps"},
+      {n:"3 days or more — back into formamide/PEG in the freezer. Over a weekend — RNase-free PBS in the fridge. Hybridisation buffer in the fridge holds for up to 2 days."},
+      {h:"Delipidation"},
+      {w:"Use a glass vial. THF attacks styrofoam-based plastics such as bijous."},
+      {n:"Making 50% THF: to limit oxidation, fill a balloon with nitrogen and connect it to a syringe with a needle through the rubber bottle stopper. Withdraw THF with a chemically resistant syringe — nitrogen replaces the volume removed."},
+      {s:"50% THF in RNase-free milliQ water. Overnight, RT, shaking. 2 ml."},
+      {s:"3 × 30 min RNase-free PBS washes. 5 ml."},
+      {s:"50% formamide in RNase-free water, 30 min RT, then 2 × 10 min refreshes until the slice sinks. 2 ml."},
+      {s:"Transfer the slices to bijou tubes at this point."},
+      {h:"HCR"},
+      {s:"Pre-heat hybridisation buffer to 37 °C."},
+      {s:"Pre-incubate the slice in 300 µl hybridisation buffer, 30 min at 37 °C, orbital shaker or oven."},
+      {s:"Add 3 µl of each probe to 300 µl hybridisation buffer and add to the sample. 37 °C overnight with agitation."},
+      {s:"Dilute the 4× probe wash buffer in RNase-free water and pre-heat to 37 °C."},
+      {s:"Wash 4 × 30 min with 500 µl wash buffer at 37 °C."},
+      {s:"Warm amplification buffer to RT and incubate the slice in 300 µl at RT, shaking."},
+      {s:"Snap cool the hairpins separately (3 µl of each): 95 °C for 90 s, then cool to RT for 30 min in the dark. PCR program “HCR”."},
+      {s:"Add hairpins to 300 µl amplification buffer and add to the sample. Overnight at RT with agitation."},
+      {s:"Dilute the 4× amplification wash buffer in RNase-free water, warm to RT, wash 3 × 30 min at RT, 500 µl."},
+      {s:"Wash in PBS 3 × 20 min, RT, shaking. Add DAPI 1:1000 here if needed, 3 ml."},
+      {h:"Refractive index matching"},
+      {s:"1 ml per slice of EZView/nRIM with 1:100 PVSA, 60 min. Refresh in a further 1 ml until clear — overnight works well."},
+      {h:"Reagents"},
+      {r:[
+        ["THF","ThermoScientific","326971000 100ml"],
+        ["Ultrapure water","Sigma Aldrich","W4502-1L"],
+        ["Formamide","Sigma Aldrich","F7503-500ml"],
+        ["PVSA","Sigma Aldrich","278424-250ml"],
+        ["Nycodenz","Proteogenix","#1002424"],
+        ["Urea","Sigma Aldrich","U5128-1kg"],
+        ["Chemical resistant syringe","Fisher Scientific","12951031"]
+      ]},
+      {n:"Make formamide fresh when used. Hybridisation, amplification, probe wash and amplification wash buffers, probes and hairpins have no product codes listed."}
+    ]
+  }
+];
+
+function esc(t){ return String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;"); }
+
+function renderList(){
+  var host = document.getElementById("proList");
+  if(!RECIPES.length){
+    host.innerHTML = '<div class="hazard">No entries yet</div>';
+    return;
+  }
+  host.innerHTML = '<h2 class="panel-title">Recipes and protocols</h2>';
+  RECIPES.forEach(function(r, i){
+    var b = document.createElement("button");
+    b.className = "prow";
+    b.innerHTML = esc(r.title) + (r.sub ? "<span>" + esc(r.sub) + "</span>" : "");
+    b.addEventListener("click", function(){ openRecipe(i); });
+    host.appendChild(b);
+  });
+}
+
+function openRecipe(i){
+  var r = RECIPES[i];
+  var d = document.getElementById("proDetail");
+  var html = '<button class="back" id="proBack">&#8592; All protocols</button>' +
+             '<div class="ptitle">' + esc(r.title) + '</div>' +
+             (r.sub ? '<div class="psub">' + esc(r.sub) + '</div>' : '');
+  var open = false;
+  r.blocks.forEach(function(b){
+    if(b.h){
+      if(open){ html += '</div>'; open = false; }
+      html += '<h2 class="panel-title">' + esc(b.h) + '</h2>';
+    }
+    if(!open){ html += '<div class="panel">'; open = true; }
+    if(b.s) html += '<div class="step">' + esc(b.s) + '</div>';
+    if(b.n) html += '<div class="pnote">' + esc(b.n) + '</div>';
+    if(b.w) html += '<div class="flag">' + esc(b.w) + '</div>';
+    if(b.r){
+      html += '<table class="reag">';
+      b.r.forEach(function(row){
+        html += '<tr><td>' + esc(row[0]) + '</td><td>' + esc(row[1]) +
+                '</td><td>' + esc(row[2]) + '</td></tr>';
+      });
+      html += '</table>';
+    }
+  });
+  if(open) html += '</div>';
+  d.innerHTML = html;
+  d.classList.remove("hidden");
+  document.getElementById("proList").classList.add("hidden");
+  document.getElementById("proBack").addEventListener("click", closeRecipe);
+  window.scrollTo(0,0);
+}
+
+function closeRecipe(){
+  document.getElementById("proDetail").classList.add("hidden");
+  document.getElementById("proList").classList.remove("hidden");
+  window.scrollTo(0,0);
+}
+
+/* ---------- tabs ---------- */
+document.querySelectorAll(".tab").forEach(function(btn){
+  btn.addEventListener("click", function(){
+    document.querySelectorAll(".tab").forEach(function(b){ b.setAttribute("aria-selected","false"); });
+    btn.setAttribute("aria-selected","true");
+    ["wv","dil","pro"].forEach(function(t){
+      document.getElementById("tab-"+t).classList.toggle("hidden", t !== btn.dataset.tab);
+    });
+    window.scrollTo(0,0);
+  });
+});
+
+/* ---------- wire up ---------- */
+["wvVol","wvUnit","wvPct"].forEach(function(id){ document.getElementById(id).addEventListener("input", calcWV); });
+["bkMass","bkMassUnit","bkVol","bkVolUnit"].forEach(function(id){ document.getElementById(id).addEventListener("input", calcBack); });
+["dStock","dTarget","dVol","dVolUnit"].forEach(function(id){ document.getElementById(id).addEventListener("input", calcDil); });
+["eqC1","eqV1","eqC2","eqV2"].forEach(function(id){ document.getElementById(id).addEventListener("input", calcEq); });
+document.getElementById("eqSolve").addEventListener("change", calcEq);
+["fFold","fVol"].forEach(function(id){ document.getElementById(id).addEventListener("input", calcFold); });
+
+calcWV(); calcBack(); calcDil(); calcEq(); calcFold(); renderList();
+</script>
+</body>
+</html>
