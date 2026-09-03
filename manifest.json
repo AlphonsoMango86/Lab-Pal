@@ -1,6 +1,6 @@
 {
-  "name": "Lift Pal",
-  "short_name": "Lift Pal",
+  "name": "Science Pal",
+  "short_name": "Science Pal",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#d9d7cc",

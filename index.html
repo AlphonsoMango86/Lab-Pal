@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Lift Pal</title>
+<title>Science Pal</title>
 
 <!-- PWA / add-to-home-screen support -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
-<meta name="apple-mobile-web-app-title" content="Lift Pal">
+<meta name="apple-mobile-web-app-title" content="Science Pal">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#4b5a5b">
 <link rel="apple-touch-icon" href="icon-180.png">
@@ -24,22 +24,14 @@
     --panel:#c7c5b7;
     --panel-line:#a8a695;
     --panel-head:#93958a;
-    --ink:#2b2b26;
-    --ink-dim:#66675c;
+    --ink:#22221d;
+    --ink-dim:#4b4c43;
     --accent:#3f8b81;
     --accent-bg:#dbe6e2;
-    --warn:#ff7a00;
-    --warn-bg:#ffdfae;
+    --warn:#8a5a00;
+    --warn-bg:#f0dca0;
     --hazardA:#cecbbd;
     --hazardB:#aaa896;
-    --steel:#8b8d8f;
-    --steel-dark:#4a4b4d;
-    --red:#c62a2a;
-    --blue:#1f5fa8;
-    --green:#2f7d3c;
-    --yellow:#d9ae00;
-    --grey:#7c7f82;
-    --black:#232323;
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
@@ -53,723 +45,648 @@
     width:100%;
     background:var(--titlebar);
     color:var(--titlebar-text);
-    padding:16px 16px;
-    font-size:16px;
+    padding:16px;
+    font-size:17px;
     letter-spacing:0.18em;
     text-transform:uppercase;
     font-weight:700;
     border-bottom:2px solid var(--titlebar-line);
-  }
-  .wrap{
-    max-width:460px;
-    margin:0 auto;
-    padding:20px 16px 60px;
-  }
-
-  .panel-title{
     display:flex;
-    align-items:center;
-    gap:10px;
-    color:var(--accent);
-    font-size:12px;
+    justify-content:space-between;
+    align-items:baseline;
+  }
+  .titlebar .sub{
+    font-size:11px;
+    letter-spacing:0.14em;
+    opacity:0.7;
+    font-weight:400;
+  }
+  .wrap{max-width:460px;margin:0 auto;padding:18px 16px 60px;}
+
+  /* tabs */
+  .tabs{display:flex;gap:0;margin-bottom:18px;border:1px solid var(--panel-line);}
+  .tab{
+    flex:1;
+    background:var(--panel);
+    color:var(--ink-dim);
+    border:0;
+    border-right:1px solid var(--panel-line);
+    padding:11px 4px;
+    font-family:inherit;
+    font-size:12.5px;
     letter-spacing:0.12em;
     text-transform:uppercase;
     font-weight:700;
-    margin:28px 0 6px;
-  }
-  .panel-title::after{
-    content:'';
-    flex:1;
-    height:1px;
-    background:var(--accent);
-    opacity:0.45;
-  }
-  .panel-title.first{margin-top:0;}
-
-  .sub{
-    font-size:12px;
-    color:var(--ink-dim);
-    margin:0 0 18px;
-    line-height:1.55;
-  }
-
-  /* Tabs */
-  .tabs{
-    display:flex;
-    border-bottom:1px solid var(--panel-line);
-    margin-bottom:20px;
-  }
-  .tabbtn{
-    flex:1;
-    background:transparent;
-    border:none;
-    padding:12px 6px;
-    font-family:inherit;
-    font-size:12px;
-    letter-spacing:0.1em;
-    text-transform:uppercase;
-    font-weight:700;
-    color:var(--ink-dim);
     cursor:pointer;
-    border-bottom:3px solid transparent;
   }
-  .tabbtn.active{
+  .tab:last-child{border-right:0;}
+  .tab[aria-selected="true"]{background:var(--titlebar);color:var(--titlebar-text);}
+  .tab:focus-visible{outline:2px solid var(--accent);outline-offset:-4px;}
+
+  .panel-title{
+    display:flex;align-items:center;gap:10px;
     color:var(--accent);
-    border-bottom-color:var(--accent);
+    font-size:12.5px;letter-spacing:0.16em;text-transform:uppercase;font-weight:700;
+    margin:0 0 8px;
   }
-  .tabpanel{display:none;}
-  .tabpanel.active{display:block;}
+  .panel-title::after{content:"";flex:1;height:1px;background:var(--accent);opacity:0.55;}
 
-  /* Bar type toggle */
-  .bartoggle{
-    display:flex;
-    gap:8px;
-    margin-bottom:18px;
-  }
-  .bartoggle button{
-    flex:1;
-    padding:12px 10px;
-    border-radius:3px;
-    border:1px solid var(--panel-line);
+  .panel{
     background:var(--panel);
-    color:var(--ink-dim);
-    font-family:inherit;
-    font-size:12px;
-    font-weight:600;
-    text-align:left;
-    cursor:pointer;
+    border:1px solid var(--panel-line);
+    padding:14px;
+    margin-bottom:22px;
   }
-  .bartoggle button .n{
+  .note{font-size:13px;line-height:1.55;color:var(--ink-dim);margin:0 0 12px;}
+
+  label{
     display:block;
-    font-size:19px;
-    font-weight:800;
-    color:var(--ink);
-    margin-bottom:2px;
+    font-size:11.5px;letter-spacing:0.14em;text-transform:uppercase;
+    color:var(--ink-dim);margin-bottom:5px;
   }
-  .bartoggle button.active{
-    border-color:var(--accent);
+  .field{margin-bottom:12px;}
+  .row{display:flex;gap:10px;}
+  .row .field{flex:1;}
+  input[type="number"]{
+    width:100%;
+    background:#e6e4d9;
+    border:1px solid var(--panel-line);
+    border-bottom:2px solid var(--panel-head);
+    padding:10px;
+    font-family:inherit;font-size:18px;color:var(--ink);
+  }
+  input:focus{outline:2px solid var(--accent);outline-offset:-2px;}
+  .inputwrap{position:relative;}
+  .inputwrap input{padding-right:34px;}
+  .inputwrap .suffix{
+    position:absolute;right:11px;top:50%;transform:translateY(-50%);
+    font-size:17px;font-weight:700;color:var(--accent);pointer-events:none;
+  }
+  select{
+    width:100%;
+    background:#e6e4d9;
+    border:1px solid var(--panel-line);
+    padding:9px;
+    font-family:inherit;font-size:15px;color:var(--ink);
+  }
+
+  .readout{
     background:var(--accent-bg);
-  }
-  .bartoggle button.active .n{color:var(--accent);}
-
-  /* Weight input */
-  .weightbox{
-    background:var(--panel);
-    border:1px solid var(--panel-line);
-    border-radius:4px;
-    padding:16px 16px;
-    margin-bottom:14px;
-  }
-  .weightbox label{
-    display:block;
-    font-size:11px;
-    letter-spacing:0.1em;
-    text-transform:uppercase;
-    color:var(--ink-dim);
-    margin-bottom:10px;
-    font-weight:700;
-  }
-  .stepper{
-    display:flex;
-    align-items:center;
-    gap:14px;
-  }
-  .stepper button{
-    width:42px;
-    height:42px;
-    border-radius:3px;
-    border:1px solid var(--panel-line);
-    background:var(--panel-head);
-    color:var(--titlebar-text);
-    font-size:20px;
-    line-height:1;
-    cursor:pointer;
-    font-family:inherit;
-  }
-  .stepper button:active{background:var(--steel-dark);}
-  .stepper input{
-    flex:1;
-    background:transparent;
-    border:none;
-    color:var(--ink);
-    font-family:inherit;
-    font-size:32px;
-    font-weight:800;
+    border:1px solid var(--accent);
+    padding:14px;
     text-align:center;
-    width:100%;
-    -moz-appearance:textfield;
   }
-  .stepper input::-webkit-outer-spin-button,
-  .stepper input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
-
-  .achieved{
-    font-size:11px;
-    color:var(--ink-dim);
-    text-align:center;
-    margin-top:10px;
-    min-height:16px;
-  }
-  .achieved b{color:var(--accent);}
-
-  /* Bar diagram */
-  .stage{
-    background:var(--panel);
-    border:1px solid var(--panel-line);
-    border-radius:4px;
-    padding:10px 4px 4px;
-    margin-bottom:14px;
-    overflow:hidden;
-  }
-  svg{display:block;width:100%;height:auto;}
-
-  /* Breakdown */
-  .breakdown{
-    background:var(--panel);
-    border:1px solid var(--panel-line);
-    border-radius:4px;
-    padding:16px;
-  }
-  .breakdown h2{
-    font-size:11px;
-    letter-spacing:0.1em;
-    text-transform:uppercase;
-    color:var(--ink-dim);
-    margin:0 0 12px;
-    font-weight:700;
-  }
-  .row{
-    display:flex;
-    align-items:center;
-    gap:12px;
-    padding:9px 0;
-    border-top:1px solid var(--panel-line);
-  }
-  .row:first-of-type{border-top:none;}
-  .swatch{
-    width:20px;
-    height:20px;
-    border-radius:50%;
-    flex-shrink:0;
-    border:2px solid rgba(0,0,0,0.25);
-  }
-  .row .label{
-    flex:1;
-    font-size:14px;
-    font-weight:600;
+  .readout .big{
+    font-size:32px;font-weight:700;letter-spacing:0.02em;line-height:1.1;
     color:var(--ink);
   }
-  .row .count{
-    font-size:14px;
-    color:var(--ink-dim);
-    font-weight:600;
+  .readout .cap{
+    font-size:11.5px;letter-spacing:0.16em;text-transform:uppercase;
+    color:var(--accent);margin-bottom:6px;
   }
-  .row.swap .swatch{
-    box-shadow:0 0 0 2px var(--warn);
-  }
-  .empty{
-    position:relative;
-    height:40px;
-    display:flex;
-    align-items:center;
-    background:repeating-linear-gradient(45deg, var(--hazardA) 0 10px, var(--hazardB) 10px 20px);
-    border:1px solid var(--panel-line);
-  }
-  .empty span{
-    background:var(--panel);
-    color:var(--ink-dim);
-    font-size:10px;
-    letter-spacing:0.08em;
-    text-transform:uppercase;
-    font-weight:700;
-    padding:6px 10px;
-    margin-left:8px;
-    border:1px solid var(--panel-line);
-  }
-  .perside-note{
-    font-size:11px;
-    color:var(--ink-dim);
+  .readout .alt{font-size:12.5px;color:var(--ink-dim);margin-top:6px;}
+
+  .split{display:flex;gap:10px;}
+  .split .readout{flex:1;}
+  .split .readout .big{font-size:24px;}
+
+  .method{
     margin-top:12px;
-    line-height:1.5;
-  }
-
-  .ladder-grid{
-    display:flex;
-    flex-direction:column;
-    gap:12px;
-  }
-  .ladder-card{
-    background:var(--panel);
-    border:1px solid var(--panel-line);
-    border-radius:4px;
-    padding:12px 14px 14px;
-  }
-  .ladder-card-head{
-    display:flex;
-    align-items:baseline;
-    justify-content:space-between;
-    margin-bottom:2px;
-  }
-  .ladder-card-head .pct{
-    font-size:19px;
-    font-weight:800;
+    font-size:13.5px;line-height:1.6;
+    border-top:1px dashed var(--panel-head);
+    padding-top:10px;
     color:var(--ink);
   }
-  .ladder-card-head .pctweight{
-    font-size:13px;
-    font-weight:700;
-    color:var(--ink-dim);
-  }
-  .ladder-card-head .rounded{
-    font-weight:500;
-    font-size:11px;
-  }
-  .ladder-svg{
-    margin:2px 0 6px;
-  }
-  .ladder-svg svg{
-    display:block;
-    width:100%;
-    height:auto;
-  }
-  .ladder-summary{
-    font-size:12px;
-    color:var(--ink);
-    font-weight:600;
-    line-height:1.4;
-  }
+  .method b{color:var(--accent);}
 
-  .subhead{
-    font-size:11px;
-    letter-spacing:0.08em;
-    text-transform:uppercase;
-    color:var(--ink-dim);
-    font-weight:700;
-    margin:14px 0 2px;
-  }
-  .subhead:first-child{margin-top:0;}
-  .swaptag{
-    font-size:10px;
-    font-weight:700;
-    letter-spacing:0.04em;
-    text-transform:uppercase;
-    color:var(--warn);
+  .flag{
+    margin-top:10px;
     background:var(--warn-bg);
-    border-radius:3px;
-    padding:2px 6px;
-    margin-left:6px;
-  }
-  .partner-readout{
-    font-size:13px;
-    color:var(--ink);
-    font-weight:600;
-    margin-bottom:2px;
-  }
-  .partner-readout .lo,.partner-readout .hi{color:var(--ink-dim);font-weight:500;}
-  .swap-line{
+    border:1px solid var(--warn);
     color:var(--warn);
-    margin-top:2px;
+    padding:9px;
+    font-size:12.5px;line-height:1.5;
+  }
+
+  .hazard{
+    background:repeating-linear-gradient(45deg,var(--hazardA) 0 10px,var(--hazardB) 10px 20px);
+    border:1px solid var(--panel-line);
+    padding:26px 14px;
+    text-align:center;
+    font-size:12.5px;letter-spacing:0.16em;text-transform:uppercase;
+    color:var(--ink-dim);font-weight:700;
+  }
+  .prow{
+    display:block;width:100%;text-align:left;
+    background:var(--panel);border:1px solid var(--panel-line);
+    border-left:4px solid var(--accent);
+    padding:14px;margin-bottom:10px;
+    font-family:inherit;font-size:14px;font-weight:700;color:var(--ink);
+    cursor:pointer;
+  }
+  .prow span{display:block;font-weight:400;font-size:12px;color:var(--ink-dim);margin-top:4px;}
+  .prow:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+  .back{
+    background:none;border:0;padding:0 0 12px;
+    font-family:inherit;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;
+    color:var(--accent);cursor:pointer;font-weight:700;
+  }
+  .ptitle{font-size:17px;font-weight:700;margin:0 0 4px;letter-spacing:0.02em;}
+  .psub{font-size:12.5px;color:var(--ink-dim);margin:0 0 18px;line-height:1.5;}
+  .step{
+    font-size:13.5px;line-height:1.6;padding:8px 0 8px 16px;
+    border-bottom:1px dashed var(--panel-head);position:relative;
+  }
+  .step:last-child{border-bottom:0;}
+  .step::before{content:"\25B8";position:absolute;left:0;color:var(--accent);}
+  .pnote{font-size:12.5px;line-height:1.55;color:var(--ink-dim);padding:8px 0;font-style:italic;}
+  table.reag{width:100%;border-collapse:collapse;font-size:12px;}
+  table.reag td{border-bottom:1px solid var(--panel-line);padding:6px 4px;vertical-align:top;}
+  table.reag td:first-child{font-weight:700;}
+  table.reag td:last-child{color:var(--ink-dim);text-align:right;white-space:nowrap;}
+  .hidden{display:none;}
+  footer{
+    text-align:center;font-size:11px;letter-spacing:0.12em;
+    color:var(--ink-dim);text-transform:uppercase;margin-top:26px;
   }
 </style>
 </head>
 <body>
 
-<div class="titlebar">Lift Pal</div>
+<div class="titlebar"><span>Science Pal</span><span class="sub">Bench Calc</span></div>
 
 <div class="wrap">
 
-  <div class="bartoggle">
-    <button id="bar15" onclick="setBar(15)"><span class="n">15 kg</span>Women's bar</button>
-    <button id="bar20" onclick="setBar(20)"><span class="n">20 kg</span>Men's bar</button>
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" aria-selected="true"  data-tab="wv">Weigh out</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="dil">Dilute</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="pro">Protocols</button>
   </div>
 
-  <div class="tabs">
-    <button class="tabbtn active" id="tabBtnSolo" onclick="setTab('solo')">1 Lifter</button>
-    <button class="tabbtn" id="tabBtnDuo" onclick="setTab('duo')">2 Lifters</button>
-  </div>
+  <!-- ================= WEIGH OUT ================= -->
+  <section id="tab-wv">
 
-  <!-- ============ TAB: SOLO ============ -->
-  <div id="tabSolo" class="tabpanel active">
-
-    <div class="panel-title first">Load Calculator</div>
-    <p class="sub">Set a target weight and see exactly what to load on each side.</p>
-
-    <div class="weightbox">
-      <label>Target weight (kg)</label>
-      <div class="stepper">
-        <button onclick="step(-2.5)">–</button>
-        <input id="weightInput" type="number" step="2.5" inputmode="decimal" value="60" oninput="calc()">
-        <button onclick="step(2.5)">+</button>
+    <h2 class="panel-title">Solid into liquid</h2>
+    <div class="panel">
+      <p class="note">% w/v, where 1 g in 100 ml = 1%. Enter your final volume and the strength you want.</p>
+      <div class="row">
+        <div class="field">
+          <label for="wvVol">Final volume</label>
+          <input type="number" id="wvVol" inputmode="decimal" step="any" min="0" value="100">
+        </div>
+        <div class="field">
+          <label for="wvUnit">Unit</label>
+          <select id="wvUnit">
+            <option value="1">ml</option>
+            <option value="1000">litres</option>
+          </select>
+        </div>
       </div>
-      <div class="achieved" id="achieved"></div>
-    </div>
-
-    <div class="stage">
-      <svg id="barSvg" viewBox="0 0 960 260" xmlns="http://www.w3.org/2000/svg"></svg>
-    </div>
-
-    <div class="breakdown">
-      <h2>Per side</h2>
-      <div id="rows"></div>
-      <div class="perside-note">Assumes an unlimited supply of each plate. Smallest increment is 1.25&nbsp;kg plates (2.5&nbsp;kg per pair), so odd targets round to the nearest loadable weight.</div>
-    </div>
-
-    <div class="panel-title">Percentage Ladder</div>
-    <p class="sub">Set your top-end goal as 100%, then see the load for each drop-down percentage below.</p>
-
-    <div class="weightbox">
-      <label>Goal weight (100%)</label>
-      <div class="stepper">
-        <button onclick="stepGoal(-2.5)">–</button>
-        <input id="goalInput" type="number" step="2.5" inputmode="decimal" value="100" oninput="renderLadder()">
-        <button onclick="stepGoal(2.5)">+</button>
+      <div class="field">
+        <label for="wvPct">Strength required (w/v)</label>
+        <div class="inputwrap">
+          <input type="number" id="wvPct" inputmode="decimal" step="any" min="0" value="4">
+          <span class="suffix">%</span>
+        </div>
       </div>
-      <div class="achieved" id="goalReadout"></div>
-    </div>
 
-    <div id="ladderCards" class="ladder-grid"></div>
-
-  </div>
-
-  <!-- ============ TAB: DUO ============ -->
-  <div id="tabDuo" class="tabpanel">
-
-    <div class="panel-title first">Partner Swap</div>
-    <p class="sub">Lifting with a partner at a different weight? Load the lighter weight first as a fixed base, then this shows the extra "swap set" to add on the outside — so switching lifters only ever means adding or pulling a few plates, not rebuilding the bar.</p>
-
-    <div class="weightbox">
-      <label>Your weight</label>
-      <div class="stepper">
-        <button onclick="stepPartner('A',-2.5)">–</button>
-        <input id="loadA" type="number" step="2.5" inputmode="decimal" value="60" oninput="renderPartner()">
-        <button onclick="stepPartner('A',2.5)">+</button>
+      <div class="readout">
+        <div class="cap">Weigh out</div>
+        <div class="big" id="wvOut">4 g</div>
+        <div class="alt" id="wvAlt">4000 mg</div>
       </div>
+      <div class="method" id="wvMethod"></div>
+      <div class="flag hidden" id="wvFlag"></div>
     </div>
 
-    <div class="weightbox">
-      <label>Partner's weight</label>
-      <div class="stepper">
-        <button onclick="stepPartner('B',-2.5)">–</button>
-        <input id="loadB" type="number" step="2.5" inputmode="decimal" value="80" oninput="renderPartner()">
-        <button onclick="stepPartner('B',2.5)">+</button>
+    <h2 class="panel-title">Work back to a %</h2>
+    <div class="panel">
+      <p class="note">Already weighed something out? Enter mass and volume to get the strength.</p>
+      <div class="row">
+        <div class="field">
+          <label for="bkMass">Mass</label>
+          <input type="number" id="bkMass" inputmode="decimal" step="any" min="0" value="2">
+        </div>
+        <div class="field">
+          <label for="bkMassUnit">Unit</label>
+          <select id="bkMassUnit">
+            <option value="1">g</option>
+            <option value="0.001">mg</option>
+          </select>
+        </div>
       </div>
-    </div>
-
-    <div class="stage">
-      <div id="partnerSvgWrap"></div>
-    </div>
-
-    <div class="breakdown">
-      <div class="partner-readout" id="partnerReadout"></div>
-      <div class="subhead">Stays loaded — base</div>
-      <div id="partnerBaseRows"></div>
-      <div class="subhead">Swap set — add / remove between lifters</div>
-      <div id="partnerSwapRows"></div>
-      <div class="perside-note">Base plates never move. When swapping lifters, only add or remove the swap-set plates above (marked with a gold ring) — everything else stays exactly as loaded.</div>
-    </div>
-
-    <div class="panel-title">Partner Percentage Ladder</div>
-    <p class="sub">When you and your partner are working toward different top-end goals, this runs the base/swap logic above at every percentage step — so each rung shows the fewest plates to move when you swap places.</p>
-
-    <div class="weightbox">
-      <label>Your goal weight (100%)</label>
-      <div class="stepper">
-        <button onclick="stepPGoal('A',-2.5)">–</button>
-        <input id="pGoalA" type="number" step="2.5" inputmode="decimal" value="100" oninput="renderPartnerLadder()">
-        <button onclick="stepPGoal('A',2.5)">+</button>
+      <div class="row">
+        <div class="field">
+          <label for="bkVol">In volume</label>
+          <input type="number" id="bkVol" inputmode="decimal" step="any" min="0" value="50">
+        </div>
+        <div class="field">
+          <label for="bkVolUnit">Unit</label>
+          <select id="bkVolUnit">
+            <option value="1">ml</option>
+            <option value="1000">litres</option>
+          </select>
+        </div>
+      </div>
+      <div class="readout">
+        <div class="cap">Strength</div>
+        <div class="big" id="bkOut">4 % w/v</div>
+        <div class="alt" id="bkAlt">40 mg/ml</div>
       </div>
     </div>
 
-    <div class="weightbox">
-      <label>Partner's goal weight (100%)</label>
-      <div class="stepper">
-        <button onclick="stepPGoal('B',-2.5)">–</button>
-        <input id="pGoalB" type="number" step="2.5" inputmode="decimal" value="80" oninput="renderPartnerLadder()">
-        <button onclick="stepPGoal('B',2.5)">+</button>
+  </section>
+
+  <!-- ================= DILUTE ================= -->
+  <section id="tab-dil" class="hidden">
+
+    <h2 class="panel-title">Stock to working strength</h2>
+    <div class="panel">
+      <p class="note">C1V1 = C2V2. Works for any % stock — w/v or v/v — as long as both strengths are the same kind.</p>
+      <div class="row">
+        <div class="field">
+          <label for="dStock">Stock %</label>
+          <input type="number" id="dStock" inputmode="decimal" step="any" min="0" value="16">
+        </div>
+        <div class="field">
+          <label for="dTarget">Working %</label>
+          <input type="number" id="dTarget" inputmode="decimal" step="any" min="0" value="4">
+        </div>
       </div>
+      <div class="row">
+        <div class="field">
+          <label for="dVol">Final volume</label>
+          <input type="number" id="dVol" inputmode="decimal" step="any" min="0" value="50">
+        </div>
+        <div class="field">
+          <label for="dVolUnit">Unit</label>
+          <select id="dVolUnit">
+            <option value="1">ml</option>
+            <option value="1000">litres</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="split">
+        <div class="readout">
+          <div class="cap">Stock</div>
+          <div class="big" id="dStockOut">12.5 ml</div>
+        </div>
+        <div class="readout">
+          <div class="cap">Diluent</div>
+          <div class="big" id="dDilOut">37.5 ml</div>
+        </div>
+      </div>
+      <div class="method" id="dMethod"></div>
+      <div class="flag hidden" id="dFlag"></div>
     </div>
 
-    <div id="partnerLadderCards" class="ladder-grid"></div>
+    <h2 class="panel-title">C1V1 = C2V2 solver</h2>
+    <div class="panel">
+      <p class="note">Fill in any three, pick the fourth as the unknown. Concentration units just have to match each other — M, mM, mg/ml, %, anything. Volumes are ml.</p>
+      <div class="field">
+        <label for="eqSolve">Solve for</label>
+        <select id="eqSolve">
+          <option value="c1">C1 — stock concentration</option>
+          <option value="v1" selected>V1 — volume of stock</option>
+          <option value="c2">C2 — final concentration</option>
+          <option value="v2">V2 — final volume</option>
+        </select>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label for="eqC1">C1 (conc)</label>
+          <input type="number" id="eqC1" inputmode="decimal" step="any" min="0" value="10">
+        </div>
+        <div class="field">
+          <label for="eqV1">V1 (ml)</label>
+          <input type="number" id="eqV1" inputmode="decimal" step="any" min="0" value="">
+        </div>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label for="eqC2">C2 (conc)</label>
+          <input type="number" id="eqC2" inputmode="decimal" step="any" min="0" value="2">
+        </div>
+        <div class="field">
+          <label for="eqV2">V2 (ml)</label>
+          <input type="number" id="eqV2" inputmode="decimal" step="any" min="0" value="25">
+        </div>
+      </div>
 
-  </div>
+      <div class="readout">
+        <div class="cap" id="eqCap">V1 — volume of stock</div>
+        <div class="big" id="eqOut">5 ml</div>
+        <div class="alt" id="eqAlt"></div>
+      </div>
+      <div class="method" id="eqMethod"></div>
+      <div class="flag hidden" id="eqFlag"></div>
+    </div>
 
+    <h2 class="panel-title">Fold dilution</h2>
+    <div class="panel">
+      <p class="note">For anything quoted as 1:X — antibodies, dyes, stock buffers.</p>
+      <div class="row">
+        <div class="field">
+          <label for="fFold">Dilution 1 in</label>
+          <input type="number" id="fFold" inputmode="decimal" step="any" min="1" value="500">
+        </div>
+        <div class="field">
+          <label for="fVol">Final volume (ml)</label>
+          <input type="number" id="fVol" inputmode="decimal" step="any" min="0" value="1">
+        </div>
+      </div>
+      <div class="split">
+        <div class="readout">
+          <div class="cap">Add</div>
+          <div class="big" id="fStockOut">2 µl</div>
+        </div>
+        <div class="readout">
+          <div class="cap">Diluent</div>
+          <div class="big" id="fDilOut">998 µl</div>
+        </div>
+      </div>
+      <div class="flag hidden" id="fFlag"></div>
+    </div>
+
+  </section>
+
+  <!-- ================= PROTOCOLS ================= -->
+  <section id="tab-pro" class="hidden">
+    <div id="proList"></div>
+    <div id="proDetail" class="hidden"></div>
+  </section>
+
+  <footer>Science Pal</footer>
 </div>
 
 <script>
-// ---- Plate definitions: weight, colour, relative diameter, relative thickness ----
-const PLATES = [
-  { kg: 25,   color: 'var(--red)',   name: '25 kg  ·  red',    d: 190, w: 39 },
-  { kg: 20,   color: 'var(--blue)',  name: '20 kg  ·  blue',   d: 190, w: 33 },
-  { kg: 15,   color: 'var(--yellow)',name: '15 kg  ·  yellow', d: 170, w: 30 },
-  { kg: 10,   color: 'var(--green)', name: '10 kg  ·  green',  d: 150, w: 27 },
-  { kg: 5,    color: 'var(--grey)',  name: '5 kg  ·  grey',    d: 120, w: 21 },
-  { kg: 2.5,  color: 'var(--black)', name: '2.5 kg  ·  black', d: 95,  w: 15 },
-  { kg: 1.25, color: 'var(--black)', name: '1.25 kg  ·  black',d: 66,  w: 12 },
-];
-
-let barWeight = 20;
-
-function setTab(which){
-  document.getElementById('tabSolo').classList.toggle('active', which === 'solo');
-  document.getElementById('tabDuo').classList.toggle('active', which === 'duo');
-  document.getElementById('tabBtnSolo').classList.toggle('active', which === 'solo');
-  document.getElementById('tabBtnDuo').classList.toggle('active', which === 'duo');
+/* ---------- helpers ---------- */
+function fmt(n, dp){
+  if(!isFinite(n)) return "—";
+  var s = n.toFixed(dp === undefined ? 3 : dp);
+  s = s.replace(/\.?0+$/,"");
+  return s === "" || s === "-" ? "0" : s;
+}
+function num(id){ var v = parseFloat(document.getElementById(id).value); return isNaN(v) ? 0 : v; }
+function set(id, txt){ document.getElementById(id).textContent = txt; }
+function flag(id, msg){
+  var el = document.getElementById(id);
+  if(msg){ el.textContent = msg; el.classList.remove("hidden"); }
+  else { el.classList.add("hidden"); }
 }
 
-function setBar(kg){
-  barWeight = kg;
-  document.getElementById('bar15').classList.toggle('active', kg===15);
-  document.getElementById('bar20').classList.toggle('active', kg===20);
-  calc();
+/* ---------- weigh out ---------- */
+function calcWV(){
+  var ml  = num("wvVol") * parseFloat(document.getElementById("wvUnit").value);
+  var pct = num("wvPct");
+  var g   = ml * pct / 100;
+
+  set("wvOut", fmt(g, 4) + " g");
+  set("wvAlt", fmt(g*1000, 2) + " mg");
+  document.getElementById("wvMethod").innerHTML =
+    "Weigh <b>" + fmt(g,4) + " g</b>, dissolve in a little less than " + fmt(ml,2) +
+    " ml, then make up to <b>" + fmt(ml,2) + " ml</b> final volume.";
+
+  if(pct > 100) flag("wvFlag","Over 100% w/v — that is more than 1 g per ml. Check the figure.");
+  else if(g > 0 && g < 0.01) flag("wvFlag","Under 10 mg. Consider making a larger volume or a concentrated stock and diluting down.");
+  else flag("wvFlag","");
 }
 
-function step(delta){
-  const input = document.getElementById('weightInput');
-  let v = parseFloat(input.value) || 0;
-  v = Math.max(barWeight, v + delta);
-  input.value = v;
-  calc();
+/* ---------- back-calculate ---------- */
+function calcBack(){
+  var g  = num("bkMass") * parseFloat(document.getElementById("bkMassUnit").value);
+  var ml = num("bkVol")  * parseFloat(document.getElementById("bkVolUnit").value);
+  if(ml <= 0){ set("bkOut","—"); set("bkAlt","enter a volume"); return; }
+  var pct = g / ml * 100;
+  set("bkOut", fmt(pct,4) + " % w/v");
+  set("bkAlt", fmt(g*1000/ml, 3) + " mg/ml");
 }
 
-// Greedy fill of one side, working in 0.25kg integer units to avoid float drift
-function platesForSide(perSideKg){
-  let remaining = Math.round(perSideKg * 4); // quarter-kg units
-  const result = [];
-  for(const p of PLATES){
-    const unit = Math.round(p.kg * 4);
-    const count = Math.floor(remaining / unit);
-    if(count > 0){
-      result.push({ ...p, count });
-      remaining -= count * unit;
-    }
-  }
-  return result;
+/* ---------- dilution ---------- */
+function calcDil(){
+  var c1 = num("dStock"), c2 = num("dTarget");
+  var v2 = num("dVol") * parseFloat(document.getElementById("dVolUnit").value);
+  if(c1 <= 0){ set("dStockOut","—"); set("dDilOut","—"); flag("dFlag","Enter a stock strength above zero."); document.getElementById("dMethod").textContent=""; return; }
+  var v1 = c2 * v2 / c1;
+  var dil = v2 - v1;
+
+  set("dStockOut", v1 < 1 ? fmt(v1*1000,1) + " µl" : fmt(v1,3) + " ml");
+  set("dDilOut",  dil < 1 && dil > 0 ? fmt(dil*1000,1) + " µl" : fmt(dil,3) + " ml");
+  document.getElementById("dMethod").innerHTML =
+    "Take <b>" + fmt(v1,3) + " ml</b> of " + fmt(c1,3) + "% stock and add <b>" +
+    fmt(dil,3) + " ml</b> of diluent. That is a 1 in " + fmt(c1/c2,2) + " dilution.";
+
+  if(c2 > c1) flag("dFlag","Working strength is higher than the stock. You cannot get there by diluting.");
+  else flag("dFlag","");
 }
 
-function computeLoad(target){
-  if(isNaN(target) || target < barWeight) target = barWeight;
-  const perSideTarget = (target - barWeight) / 2;
-  const sidePlates = platesForSide(perSideTarget);
-  const perSideActual = sidePlates.reduce((s,p) => s + p.kg * p.count, 0);
-  const totalActual = barWeight + perSideActual * 2;
-  return { target, sidePlates, totalActual };
-}
+/* ---------- C1V1 = C2V2 solver ---------- */
+var EQ_LABEL = {
+  c1:"C1 — stock concentration",
+  v1:"V1 — volume of stock",
+  c2:"C2 — final concentration",
+  v2:"V2 — final volume"
+};
+function calcEq(){
+  var solveFor = document.getElementById("eqSolve").value;
+  var ids = ["c1","v1","c2","v2"];
 
-function calc(){
-  const input = document.getElementById('weightInput');
-  const { target, sidePlates, totalActual } = computeLoad(parseFloat(input.value));
-
-  const achievedEl = document.getElementById('achieved');
-  if(Math.abs(totalActual - target) > 0.01){
-    achievedEl.innerHTML = `Nearest loadable weight: <b>${totalActual} kg</b> (target was ${target} kg)`;
-  } else {
-    achievedEl.innerHTML = `Bar total: <b>${totalActual} kg</b>`;
-  }
-
-  renderRows(document.getElementById('rows'), sidePlates);
-  document.getElementById('barSvg').outerHTML = buildBarSVG(sidePlates, {
-    cx:480, cy:130, vbW:960, vbH:260, sleeveStart:70, scale:1, id:'barSvg'
+  // grey out and clear the unknown field
+  ids.forEach(function(k){
+    var el = document.getElementById("eq" + k.toUpperCase());
+    var isUnknown = (k === solveFor);
+    el.disabled = isUnknown;
+    el.style.opacity = isUnknown ? "0.4" : "1";
+    if(isUnknown) el.value = "";
   });
 
-  renderLadder();
-  renderPartner();
-  renderPartnerLadder();
-}
+  var c1 = num("eqC1"), v1 = num("eqV1"), c2 = num("eqC2"), v2 = num("eqV2");
+  var res, unit = (solveFor === "v1" || solveFor === "v2") ? " ml" : "", div;
 
-function fmtKg(n){
-  return n.toFixed(2).replace(/\.00$/,'').replace(/(\.\d)0$/,'$1');
-}
+  if(solveFor === "c1"){ div = v1; res = c2 * v2 / v1; }
+  else if(solveFor === "v1"){ div = c1; res = c2 * v2 / c1; }
+  else if(solveFor === "c2"){ div = v2; res = c1 * v1 / v2; }
+  else { div = c2; res = c1 * v1 / c2; }
 
-function renderRows(container, sidePlates, tagSwap){
-  if(sidePlates.length === 0){
-    container.innerHTML = '<div class="empty"><span>None needed</span></div>';
+  document.getElementById("eqCap").textContent = EQ_LABEL[solveFor];
+
+  if(!(div > 0) || !isFinite(res)){
+    set("eqOut","—"); set("eqAlt","");
+    document.getElementById("eqMethod").textContent = "";
+    flag("eqFlag","Fill in the other three values.");
     return;
   }
-  container.innerHTML = sidePlates.map(p => `
-    <div class="row${tagSwap ? ' swap' : ''}">
-      <div class="swatch" style="background:${p.color}"></div>
-      <div class="label">${p.count} × ${p.name}</div>
-      <div class="count">${fmtKg(p.kg*p.count)} kg</div>
-    </div>
-  `).join('');
+
+  set("eqOut", fmt(res,4) + unit);
+  set("eqAlt", (solveFor === "v1" && res < 1) ? fmt(res*1000,1) + " µl" : "");
+
+  // rebuild the full set for the method line
+  var C1 = solveFor==="c1"?res:c1, V1 = solveFor==="v1"?res:v1,
+      C2 = solveFor==="c2"?res:c2, V2 = solveFor==="v2"?res:v2;
+  document.getElementById("eqMethod").innerHTML =
+    "<b>" + fmt(C1,4) + " × " + fmt(V1,4) + " = " + fmt(C2,4) + " × " + fmt(V2,4) + "</b><br>" +
+    "Take " + fmt(V1,4) + " ml of stock and add " + fmt(V2-V1,4) + " ml of diluent to reach " +
+    fmt(V2,4) + " ml.";
+
+  if(C2 > C1) flag("eqFlag","C2 is above C1 — that is a concentration step, not a dilution. Check the values.");
+  else if(V1 > V2) flag("eqFlag","V1 is larger than V2. Check which volume is which.");
+  else flag("eqFlag","");
 }
 
-function stepPartner(which, delta){
-  const input = document.getElementById(which === 'A' ? 'loadA' : 'loadB');
-  let v = parseFloat(input.value) || 0;
-  v = Math.max(barWeight, v + delta);
-  input.value = v;
-  renderPartner();
+/* ---------- fold dilution ---------- */
+function calcFold(){
+  var fold = num("fFold"), v = num("fVol");
+  if(fold < 1){ set("fStockOut","—"); set("fDilOut","—"); flag("fFlag","A 1 in X dilution needs X of 1 or more."); return; }
+  var stock = v / fold, dil = v - stock;
+  set("fStockOut", stock < 1 ? fmt(stock*1000,2) + " µl" : fmt(stock,3) + " ml");
+  set("fDilOut",  dil  < 1 ? fmt(dil*1000,2)  + " µl" : fmt(dil,3)  + " ml");
+  if(stock*1000 < 1 && stock > 0) flag("fFlag","Under 1 µl of stock — make an intermediate dilution first.");
+  else flag("fFlag","");
 }
 
-function renderPartner(){
-  const inA = document.getElementById('loadA');
-  const inB = document.getElementById('loadB');
-  let wA = parseFloat(inA.value); if(isNaN(wA) || wA < barWeight) wA = barWeight;
-  let wB = parseFloat(inB.value); if(isNaN(wB) || wB < barWeight) wB = barWeight;
-
-  const loName = wA <= wB ? 'You' : 'Partner';
-  const hiName = wA <= wB ? 'Partner' : 'You';
-  const loW = Math.min(wA, wB);
-  const hiW = Math.max(wA, wB);
-
-  const loLoad = computeLoad(loW);
-  const hiLoad = computeLoad(hiW);
-
-  const basePlates = loLoad.sidePlates.map(p => ({ ...p, swap:false }));
-  const diffPerSide = (hiLoad.totalActual - loLoad.totalActual) / 2;
-  const swapPlates = platesForSide(diffPerSide).map(p => ({ ...p, swap:true }));
-
-  const readout = document.getElementById('partnerReadout');
-  if(diffPerSide <= 0){
-    readout.innerHTML = `Both lifters are loading the same weight — no swap set needed.`;
-  } else {
-    readout.innerHTML = `<span class="lo">${loName} · ${fmtKg(loLoad.totalActual)} kg (base)</span> &nbsp;→&nbsp; <span class="hi">${hiName} · ${fmtKg(hiLoad.totalActual)} kg (base + swap set)</span>`;
+/* ---------- protocols ---------- */
+/* Block types: h = heading, s = step, n = note, w = warning, r = reagent rows */
+var RECIPES = [
+  {
+    title: "nRIM / EZView",
+    sub: "Refractive index matching medium",
+    blocks: [
+      {h:"Phosphate buffer stock"},
+      {s:"0.2 M: 500 ml dH2O + 3.1 g NaH2PO4 (monobasic) + 10.0 g Na2HPO4 (dibasic). Dilute 1:10 in dH2O for use."},
+      {s:"Or make 0.02 M directly: 12.4 g NaH2PO4 (monobasic) + 40 g Na2HPO4·2H2O, made up to 2 L in dH2O."},
+      {h:"nRIM"},
+      {s:"52.5 g urea + 31.25 mg sodium azide in 42 ml 0.02 M sodium phosphate buffer. Stir at 37 °C."},
+      {s:"Once dissolved, add 100 g Nycodenz slowly until dissolved. Gives RI around 1.512."},
+      {h:"Bringing the RI down"},
+      {s:"A further 54 ml takes it to RI 1.46 — some systems prefer this."},
+      {s:"A further 64 ml takes it to RI 1.4589, the closest match achieved to 1.4587 oil."},
+      {n:"Confirm on the refractometer rather than trusting the volumes."},
+      {h:"Reagents"},
+      {r:[["Nycodenz","Proteogenix","#1002424"],["Urea","Sigma Aldrich","U5128-1kg"]]}
+    ]
+  },
+  {
+    title: "HCR labelling",
+    sub: "700 µm mouse brain slices, single round. Follows on from the brain slicing protocol.",
+    blocks: [
+      {n:"Slice has been post-fixed in 4% PFA and stored in 50% formamide, 20% PEG in the freezer."},
+      {s:"Wash 3 × 30 min in RNase-free PBS to wash out the formamide/PEG."},
+      {h:"Pause steps"},
+      {n:"3 days or more — back into formamide/PEG in the freezer. Over a weekend — RNase-free PBS in the fridge. Hybridisation buffer in the fridge holds for up to 2 days."},
+      {h:"Delipidation"},
+      {w:"Use a glass vial. THF attacks styrofoam-based plastics such as bijous."},
+      {n:"Making 50% THF: to limit oxidation, fill a balloon with nitrogen and connect it to a syringe with a needle through the rubber bottle stopper. Withdraw THF with a chemically resistant syringe — nitrogen replaces the volume removed."},
+      {s:"50% THF in RNase-free milliQ water. Overnight, RT, shaking. 2 ml."},
+      {s:"3 × 30 min RNase-free PBS washes. 5 ml."},
+      {s:"50% formamide in RNase-free water, 30 min RT, then 2 × 10 min refreshes until the slice sinks. 2 ml."},
+      {s:"Transfer the slices to bijou tubes at this point."},
+      {h:"HCR"},
+      {s:"Pre-heat hybridisation buffer to 37 °C."},
+      {s:"Pre-incubate the slice in 300 µl hybridisation buffer, 30 min at 37 °C, orbital shaker or oven."},
+      {s:"Add 3 µl of each probe to 300 µl hybridisation buffer and add to the sample. 37 °C overnight with agitation."},
+      {s:"Dilute the 4× probe wash buffer in RNase-free water and pre-heat to 37 °C."},
+      {s:"Wash 4 × 30 min with 500 µl wash buffer at 37 °C."},
+      {s:"Warm amplification buffer to RT and incubate the slice in 300 µl at RT, shaking."},
+      {s:"Snap cool the hairpins separately (3 µl of each): 95 °C for 90 s, then cool to RT for 30 min in the dark. PCR program “HCR”."},
+      {s:"Add hairpins to 300 µl amplification buffer and add to the sample. Overnight at RT with agitation."},
+      {s:"Dilute the 4× amplification wash buffer in RNase-free water, warm to RT, wash 3 × 30 min at RT, 500 µl."},
+      {s:"Wash in PBS 3 × 20 min, RT, shaking. Add DAPI 1:1000 here if needed, 3 ml."},
+      {h:"Refractive index matching"},
+      {s:"1 ml per slice of EZView/nRIM with 1:100 PVSA, 60 min. Refresh in a further 1 ml until clear — overnight works well."},
+      {h:"Reagents"},
+      {r:[
+        ["THF","ThermoScientific","326971000 100ml"],
+        ["Ultrapure water","Sigma Aldrich","W4502-1L"],
+        ["Formamide","Sigma Aldrich","F7503-500ml"],
+        ["PVSA","Sigma Aldrich","278424-250ml"],
+        ["Nycodenz","Proteogenix","#1002424"],
+        ["Urea","Sigma Aldrich","U5128-1kg"],
+        ["Chemical resistant syringe","Fisher Scientific","12951031"]
+      ]},
+      {n:"Make formamide fresh when used. Hybridisation, amplification, probe wash and amplification wash buffers, probes and hairpins have no product codes listed."}
+    ]
   }
+];
 
-  renderRows(document.getElementById('partnerBaseRows'), basePlates, false);
-  renderRows(document.getElementById('partnerSwapRows'), swapPlates, true);
+function esc(t){ return String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;"); }
 
-  const combined = [...basePlates, ...swapPlates];
-  document.getElementById('partnerSvgWrap').innerHTML = buildBarSVG(combined, {
-    cx:480, cy:130, vbW:960, vbH:260, sleeveStart:70, scale:1
+function renderList(){
+  var host = document.getElementById("proList");
+  if(!RECIPES.length){
+    host.innerHTML = '<div class="hazard">No entries yet</div>';
+    return;
+  }
+  host.innerHTML = '<h2 class="panel-title">Recipes and protocols</h2>';
+  RECIPES.forEach(function(r, i){
+    var b = document.createElement("button");
+    b.className = "prow";
+    b.innerHTML = esc(r.title) + (r.sub ? "<span>" + esc(r.sub) + "</span>" : "");
+    b.addEventListener("click", function(){ openRecipe(i); });
+    host.appendChild(b);
   });
 }
 
-// compact one-line plate summary, e.g. "2 × 20kg (blue) + 1 × 5kg (grey)"
-function summarizePlates(sidePlates){
-  if(sidePlates.length === 0) return 'Empty bar — just the sleeve.';
-  return sidePlates.map(p => `${p.count} × ${p.kg}kg`).join('  +  ');
-}
-
-function buildBarSVG(sidePlates, opts){
-  const { cx, cy, vbW, vbH, sleeveStart, scale, id } = opts;
-  const barY = cy;
-  const idAttr = id ? ` id="${id}"` : '';
-
-  let svgParts = [];
-  svgParts.push(`<line x1="${cx-vbW/2+40}" y1="${barY}" x2="${cx+vbW/2-40}" y2="${barY}" stroke="var(--steel)" stroke-width="${10*scale}" stroke-linecap="round"/>`);
-
-  function buildSide(sign){
-    let x = sleeveStart;
-    let parts = [];
-    for(const p of sidePlates){
-      const d = p.d*scale, w = p.w*scale;
-      for(let i=0;i<p.count;i++){
-        const half = w/2;
-        const px = cx + sign*(x + half);
-        const stroke = p.swap ? 'var(--warn)' : 'rgba(0,0,0,0.35)';
-        const strokeW = p.swap ? 3 : 1.5;
-        const dash = p.swap ? ` stroke-dasharray="5,3"` : '';
-        parts.push(`<rect x="${px - half}" y="${cy - d/2}" width="${w}" height="${d}" rx="${4*scale}" fill="${p.color}" stroke="${stroke}" stroke-width="${strokeW}"${dash}/>`);
-        x += w;
-      }
+function openRecipe(i){
+  var r = RECIPES[i];
+  var d = document.getElementById("proDetail");
+  var html = '<button class="back" id="proBack">&#8592; All protocols</button>' +
+             '<div class="ptitle">' + esc(r.title) + '</div>' +
+             (r.sub ? '<div class="psub">' + esc(r.sub) + '</div>' : '');
+  var open = false;
+  r.blocks.forEach(function(b){
+    if(b.h){
+      if(open){ html += '</div>'; open = false; }
+      html += '<h2 class="panel-title">' + esc(b.h) + '</h2>';
     }
-    const clipX = cx + sign*(x + 6*scale);
-    parts.push(`<rect x="${clipX-4*scale}" y="${cy-18*scale}" width="${8*scale}" height="${36*scale}" rx="${3*scale}" fill="var(--steel-dark)"/>`);
-    return parts.join('');
-  }
-
-  svgParts.push(buildSide(1));
-  svgParts.push(buildSide(-1));
-
-  svgParts.push(`<rect x="${cx-sleeveStart-30*scale}" y="${cy-16*scale}" width="${30*scale}" height="${32*scale}" rx="${3*scale}" fill="var(--steel-dark)"/>`);
-  svgParts.push(`<rect x="${cx+sleeveStart}" y="${cy-16*scale}" width="${30*scale}" height="${32*scale}" rx="${3*scale}" fill="var(--steel-dark)"/>`);
-
-  return `<svg${idAttr} viewBox="0 0 ${vbW} ${vbH}" xmlns="http://www.w3.org/2000/svg">${svgParts.join('')}</svg>`;
+    if(!open){ html += '<div class="panel">'; open = true; }
+    if(b.s) html += '<div class="step">' + esc(b.s) + '</div>';
+    if(b.n) html += '<div class="pnote">' + esc(b.n) + '</div>';
+    if(b.w) html += '<div class="flag">' + esc(b.w) + '</div>';
+    if(b.r){
+      html += '<table class="reag">';
+      b.r.forEach(function(row){
+        html += '<tr><td>' + esc(row[0]) + '</td><td>' + esc(row[1]) +
+                '</td><td>' + esc(row[2]) + '</td></tr>';
+      });
+      html += '</table>';
+    }
+  });
+  if(open) html += '</div>';
+  d.innerHTML = html;
+  d.classList.remove("hidden");
+  document.getElementById("proList").classList.add("hidden");
+  document.getElementById("proBack").addEventListener("click", closeRecipe);
+  window.scrollTo(0,0);
 }
 
-const LADDER_PCTS = [95, 90, 85, 80, 75, 70, 65, 60];
-
-function renderLadder(){
-  const goalInput = document.getElementById('goalInput');
-  let goal = parseFloat(goalInput.value);
-  if(isNaN(goal) || goal < barWeight) goal = barWeight;
-
-  document.getElementById('goalReadout').innerHTML = `<b>${fmtKg(goal)} kg</b> is 100%`;
-
-  const cards = document.getElementById('ladderCards');
-  cards.innerHTML = LADDER_PCTS.map(pct => {
-    const rawTarget = goal * pct / 100;
-    const { target, sidePlates, totalActual } = computeLoad(rawTarget);
-    const svg = buildBarSVG(sidePlates, { cx:260, cy:85, vbW:520, vbH:170, sleeveStart:35, scale:0.5 });
-    const roundedNote = Math.abs(totalActual - target) > 0.01
-      ? ` <span class="rounded">(nearest of ${fmtKg(target)})</span>` : '';
-    return `
-      <div class="ladder-card">
-        <div class="ladder-card-head">
-          <span class="pct">${pct}%</span>
-          <span class="pctweight">${fmtKg(totalActual)} kg${roundedNote}</span>
-        </div>
-        <div class="ladder-svg">${svg}</div>
-        <div class="ladder-summary">${summarizePlates(sidePlates)}${sidePlates.length ? ' per side' : ''}</div>
-      </div>
-    `;
-  }).join('');
+function closeRecipe(){
+  document.getElementById("proDetail").classList.add("hidden");
+  document.getElementById("proList").classList.remove("hidden");
+  window.scrollTo(0,0);
 }
 
-function stepGoal(delta){
-  const input = document.getElementById('goalInput');
-  let v = parseFloat(input.value) || 0;
-  v = Math.max(barWeight, v + delta);
-  input.value = v;
-  renderLadder();
-}
+/* ---------- tabs ---------- */
+document.querySelectorAll(".tab").forEach(function(btn){
+  btn.addEventListener("click", function(){
+    document.querySelectorAll(".tab").forEach(function(b){ b.setAttribute("aria-selected","false"); });
+    btn.setAttribute("aria-selected","true");
+    ["wv","dil","pro"].forEach(function(t){
+      document.getElementById("tab-"+t).classList.toggle("hidden", t !== btn.dataset.tab);
+    });
+    window.scrollTo(0,0);
+  });
+});
 
-const PARTNER_LADDER_PCTS = [100, 95, 90, 85, 80, 75, 70, 65, 60];
+/* ---------- wire up ---------- */
+["wvVol","wvUnit","wvPct"].forEach(function(id){ document.getElementById(id).addEventListener("input", calcWV); });
+["bkMass","bkMassUnit","bkVol","bkVolUnit"].forEach(function(id){ document.getElementById(id).addEventListener("input", calcBack); });
+["dStock","dTarget","dVol","dVolUnit"].forEach(function(id){ document.getElementById(id).addEventListener("input", calcDil); });
+["eqC1","eqV1","eqC2","eqV2"].forEach(function(id){ document.getElementById(id).addEventListener("input", calcEq); });
+document.getElementById("eqSolve").addEventListener("change", calcEq);
+["fFold","fVol"].forEach(function(id){ document.getElementById(id).addEventListener("input", calcFold); });
 
-function stepPGoal(which, delta){
-  const input = document.getElementById(which === 'A' ? 'pGoalA' : 'pGoalB');
-  let v = parseFloat(input.value) || 0;
-  v = Math.max(barWeight, v + delta);
-  input.value = v;
-  renderPartnerLadder();
-}
-
-function renderPartnerLadder(){
-  const inA = document.getElementById('pGoalA');
-  const inB = document.getElementById('pGoalB');
-  let goalA = parseFloat(inA.value); if(isNaN(goalA) || goalA < barWeight) goalA = barWeight;
-  let goalB = parseFloat(inB.value); if(isNaN(goalB) || goalB < barWeight) goalB = barWeight;
-
-  const cards = document.getElementById('partnerLadderCards');
-  cards.innerHTML = PARTNER_LADDER_PCTS.map(pct => {
-    const wA = goalA * pct / 100;
-    const wB = goalB * pct / 100;
-
-    const loName = wA <= wB ? 'You' : 'Partner';
-    const hiName = wA <= wB ? 'Partner' : 'You';
-    const loLoad = computeLoad(Math.min(wA, wB));
-    const hiLoad = computeLoad(Math.max(wA, wB));
-
-    const basePlates = loLoad.sidePlates.map(p => ({ ...p, swap:false }));
-    const diffPerSide = (hiLoad.totalActual - loLoad.totalActual) / 2;
-    const swapPlates = diffPerSide > 0 ? platesForSide(diffPerSide).map(p => ({ ...p, swap:true })) : [];
-
-    const combined = [...basePlates, ...swapPlates];
-    const svg = buildBarSVG(combined, { cx:260, cy:85, vbW:520, vbH:170, sleeveStart:35, scale:0.5 });
-
-    const weightLine = swapPlates.length
-      ? `${loName} ${fmtKg(loLoad.totalActual)}kg &nbsp;·&nbsp; ${hiName} ${fmtKg(hiLoad.totalActual)}kg`
-      : `Both ${fmtKg(loLoad.totalActual)}kg — no swap needed`;
-
-    return `
-      <div class="ladder-card">
-        <div class="ladder-card-head">
-          <span class="pct">${pct}%</span>
-          <span class="pctweight">${weightLine}</span>
-        </div>
-        <div class="ladder-svg">${svg}</div>
-        <div class="ladder-summary">Base — ${summarizePlates(basePlates)}</div>
-        <div class="ladder-summary swap-line">${swapPlates.length ? 'Swap — add ' + summarizePlates(swapPlates) + ` for ${hiName}` : 'No swap set needed'}</div>
-      </div>
-    `;
-  }).join('');
-}
-
-setBar(20);
-calc();
-renderPartner();
-renderPartnerLadder();
+calcWV(); calcBack(); calcDil(); calcEq(); calcFold(); renderList();
 </script>
 </body>
 </html>
