@@ -73,8 +73,8 @@
     border-right:1px solid var(--panel-line);
     padding:11px 4px;
     font-family:inherit;
-    font-size:12.5px;
-    letter-spacing:0.12em;
+    font-size:12px;
+    letter-spacing:0.06em;
     text-transform:uppercase;
     font-weight:700;
     cursor:pointer;
@@ -218,8 +218,9 @@
 <div class="wrap">
 
   <div class="tabs" role="tablist">
-    <button class="tab" role="tab" aria-selected="true"  data-tab="wv">Weigh out</button>
+    <button class="tab" role="tab" aria-selected="true"  data-tab="wv">% w/v</button>
     <button class="tab" role="tab" aria-selected="false" data-tab="dil">Dilute</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="mol">Molar</button>
     <button class="tab" role="tab" aria-selected="false" data-tab="pro">Protocols</button>
   </div>
 
@@ -412,6 +413,102 @@
   </section>
 
   <!-- ================= PROTOCOLS ================= -->
+  <!-- ================= MOLARITY ================= -->
+  <section id="tab-mol" class="hidden">
+
+    <h2 class="panel-title">Mass to weigh out</h2>
+    <div class="panel">
+      <p class="note">Mass = molarity &times; volume in litres &times; molecular weight. Pick a reagent to fill the MW, or type it from the bottle.</p>
+      <div class="field">
+        <label for="mPick">Reagent (optional)</label>
+        <select id="mPick">
+          <option value="">&mdash; type MW manually &mdash;</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="mMW">Molecular weight (g/mol)</label>
+        <input type="number" id="mMW" inputmode="decimal" step="any" min="0" value="121.14">
+      </div>
+      <div class="row">
+        <div class="field">
+          <label for="mConc">Concentration</label>
+          <input type="number" id="mConc" inputmode="decimal" step="any" min="0" value="50">
+        </div>
+        <div class="field">
+          <label for="mConcUnit">Unit</label>
+          <select id="mConcUnit">
+            <option value="1">M</option>
+            <option value="0.001" selected>mM</option>
+            <option value="0.000001">&micro;M</option>
+            <option value="0.000000001">nM</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label for="mVol">Final volume</label>
+          <input type="number" id="mVol" inputmode="decimal" step="any" min="0" value="500">
+        </div>
+        <div class="field">
+          <label for="mVolUnit">Unit</label>
+          <select id="mVolUnit">
+            <option value="1">ml</option>
+            <option value="1000">litres</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="readout">
+        <div class="cap">Weigh out</div>
+        <div class="big" id="mOut">&mdash;</div>
+        <div class="alt" id="mAlt"></div>
+      </div>
+      <div class="method" id="mMethod"></div>
+      <div class="flag hidden" id="mFlag"></div>
+    </div>
+
+    <h2 class="panel-title">Work back to molarity</h2>
+    <div class="panel">
+      <p class="note">What you actually weighed, in the volume you actually made up to.</p>
+      <div class="row">
+        <div class="field">
+          <label for="mbMass">Mass</label>
+          <input type="number" id="mbMass" inputmode="decimal" step="any" min="0" value="3">
+        </div>
+        <div class="field">
+          <label for="mbMassUnit">Unit</label>
+          <select id="mbMassUnit">
+            <option value="1">g</option>
+            <option value="0.001">mg</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label for="mbMW">Molecular weight (g/mol)</label>
+        <input type="number" id="mbMW" inputmode="decimal" step="any" min="0" value="121.14">
+      </div>
+      <div class="row">
+        <div class="field">
+          <label for="mbVol">In volume</label>
+          <input type="number" id="mbVol" inputmode="decimal" step="any" min="0" value="500">
+        </div>
+        <div class="field">
+          <label for="mbVolUnit">Unit</label>
+          <select id="mbVolUnit">
+            <option value="1">ml</option>
+            <option value="1000">litres</option>
+          </select>
+        </div>
+      </div>
+      <div class="readout">
+        <div class="cap">Concentration</div>
+        <div class="big" id="mbOut">&mdash;</div>
+        <div class="alt" id="mbAlt"></div>
+      </div>
+    </div>
+
+  </section>
+
   <section id="tab-pro" class="hidden">
     <div id="proList"></div>
     <div id="proDetail" class="hidden"></div>
@@ -545,6 +642,89 @@ function calcFold(){
   else flag("fFlag","");
 }
 
+/* ---------- molarity ---------- */
+/* Add your own as ["Name", MW] */
+var MWS = [
+  ["Tris base", 121.14],
+  ["Tris HCl", 157.60],
+  ["Urea", 60.06],
+  ["Sodium azide", 65.01],
+  ["NaCl", 58.44],
+  ["KCl", 74.55],
+  ["NaOH", 40.00],
+  ["NaH2PO4 anhydrous", 119.98],
+  ["NaH2PO4 2H2O", 156.01],
+  ["Na2HPO4 anhydrous", 141.96],
+  ["Na2HPO4 2H2O", 177.99],
+  ["HEPES", 238.30],
+  ["EDTA free acid", 292.24],
+  ["EDTA disodium 2H2O", 372.24],
+  ["Glycine", 75.07],
+  ["SDS", 288.37],
+  ["Sucrose", 342.30],
+  ["Glucose", 180.16],
+  ["MgCl2 6H2O", 203.30],
+  ["CaCl2 2H2O", 147.01],
+  ["Sodium citrate 2H2O", 294.10],
+  ["Boric acid", 61.83],
+  ["DABCO", 112.17],
+  ["Sodium borohydride", 37.83]
+];
+
+function fillPicker(){
+  var sel = document.getElementById("mPick");
+  MWS.forEach(function(r){
+    var o = document.createElement("option");
+    o.value = r[1];
+    o.textContent = r[0] + " — " + r[1];
+    sel.appendChild(o);
+  });
+  sel.addEventListener("change", function(){
+    if(sel.value){
+      document.getElementById("mMW").value = sel.value;
+      document.getElementById("mbMW").value = sel.value;
+      calcMol(); calcMolBack();
+    }
+  });
+}
+
+function calcMol(){
+  var mw = num("mMW");
+  var molar = num("mConc") * parseFloat(document.getElementById("mConcUnit").value);
+  var litres = num("mVol") * parseFloat(document.getElementById("mVolUnit").value) / 1000;
+
+  if(mw <= 0){
+    set("mOut","—"); set("mAlt","");
+    document.getElementById("mMethod").textContent = "";
+    flag("mFlag","Enter a molecular weight — it is on the bottle, often as FW or M.W.");
+    return;
+  }
+
+  var g = molar * litres * mw;
+  set("mOut", g > 0 && g < 0.001 ? fmt(g*1e6,2) + " µg"
+            : (g > 0 && g < 1 ? fmt(g*1000,3) + " mg" : fmt(g,5) + " g"));
+  set("mAlt", g >= 1 ? fmt(g*1000,2) + " mg" : "");
+  document.getElementById("mMethod").innerHTML =
+    "<b>" + fmt(molar,9) + " mol/L × " + fmt(litres,5) + " L × " + fmt(mw,3) + " g/mol</b><br>" +
+    "Dissolve in part of the volume, then make up to " + fmt(litres*1000,2) + " ml.";
+
+  if(g > 0 && g < 0.005)
+    flag("mFlag","Under 5 mg — weighing error will dominate. Make a concentrated stock and dilute it down.");
+  else flag("mFlag","");
+}
+
+function calcMolBack(){
+  var g  = num("mbMass") * parseFloat(document.getElementById("mbMassUnit").value);
+  var mw = num("mbMW");
+  var litres = num("mbVol") * parseFloat(document.getElementById("mbVolUnit").value) / 1000;
+  if(mw <= 0 || litres <= 0){ set("mbOut","—"); set("mbAlt","enter MW and volume"); return; }
+  var M = g / mw / litres;
+  if(M >= 1)          { set("mbOut", fmt(M,4) + " M");       set("mbAlt", fmt(M*1000,2) + " mM"); }
+  else if(M >= 0.001) { set("mbOut", fmt(M*1000,4) + " mM"); set("mbAlt", fmt(M,6) + " M"); }
+  else if(M >= 1e-6)  { set("mbOut", fmt(M*1e6,4) + " µM");  set("mbAlt", fmt(M*1000,6) + " mM"); }
+  else                { set("mbOut", fmt(M*1e9,3) + " nM");  set("mbAlt", fmt(M*1e6,6) + " µM"); }
+}
+
 /* ---------- protocols ---------- */
 /* Block types: h = heading, s = step, n = note, w = warning, r = reagent rows */
 var RECIPES = [
@@ -671,7 +851,7 @@ document.querySelectorAll(".tab").forEach(function(btn){
   btn.addEventListener("click", function(){
     document.querySelectorAll(".tab").forEach(function(b){ b.setAttribute("aria-selected","false"); });
     btn.setAttribute("aria-selected","true");
-    ["wv","dil","pro"].forEach(function(t){
+    ["wv","dil","mol","pro"].forEach(function(t){
       document.getElementById("tab-"+t).classList.toggle("hidden", t !== btn.dataset.tab);
     });
     window.scrollTo(0,0);
@@ -682,11 +862,13 @@ document.querySelectorAll(".tab").forEach(function(btn){
 ["wvVol","wvUnit","wvPct"].forEach(function(id){ document.getElementById(id).addEventListener("input", calcWV); });
 ["bkMass","bkMassUnit","bkVol","bkVolUnit"].forEach(function(id){ document.getElementById(id).addEventListener("input", calcBack); });
 ["dStock","dTarget","dVol","dVolUnit"].forEach(function(id){ document.getElementById(id).addEventListener("input", calcDil); });
+["mMW","mConc","mConcUnit","mVol","mVolUnit"].forEach(function(id){ document.getElementById(id).addEventListener("input", calcMol); });
+["mbMass","mbMassUnit","mbMW","mbVol","mbVolUnit"].forEach(function(id){ document.getElementById(id).addEventListener("input", calcMolBack); });
 ["eqC1","eqV1","eqC2","eqV2"].forEach(function(id){ document.getElementById(id).addEventListener("input", calcEq); });
 document.getElementById("eqSolve").addEventListener("change", calcEq);
 ["fFold","fVol"].forEach(function(id){ document.getElementById(id).addEventListener("input", calcFold); });
 
-calcWV(); calcBack(); calcDil(); calcEq(); calcFold(); renderList();
+calcWV(); calcBack(); calcDil(); calcEq(); calcFold(); fillPicker(); calcMol(); calcMolBack(); renderList();
 </script>
 </body>
 </html>
